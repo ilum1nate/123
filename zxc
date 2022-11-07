@@ -1,3 +1,4 @@
+if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playing Parkour
 -- Wait until loaded
 repeat task.wait() until game:IsLoaded()
 
@@ -108,4 +109,5 @@ end
 
 if have == 0 then 
 	Teleport()
+end
 end
