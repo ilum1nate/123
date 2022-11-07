@@ -1,4 +1,6 @@
 if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playing Parkour
+_G.Loaded = true
+
 -- Wait until loaded
 repeat task.wait() until game:IsLoaded()
 
