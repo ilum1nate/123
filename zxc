@@ -11,9 +11,10 @@ if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playin
     pcall(function()
         queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ilum1nate/123/main/zxc'))()")
     end)
-
+	
+	print("Welcome to fuck hudzell.")
 	--loadstring(game:HttpGet("https://raw.githubusercontent.com/xgamerman626/Hub/main/Init.lua"))()
-	--task.wait(3)
+	task.wait(10)
 	local PlaceID = game.PlaceId
 	local AllIDs = {}
 	local foundAnything = ""
