@@ -3,6 +3,14 @@ if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playin
 
     _G.Loaded = true
     print("Welcome to fuck hudzell.")
+    
+    -- Wait until loaded
+    repeat task.wait() until game:IsLoaded()
+    
+    -- Keep GUI on rejoin/hop/ranked
+    pcall(function()
+        queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/ilum1nate/123/main/zxc'))()")
+    end)
 
 	--loadstring(game:HttpGet("https://raw.githubusercontent.com/xgamerman626/Hub/main/Init.lua"))()
 	--task.wait(3)
