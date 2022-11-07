@@ -3,6 +3,112 @@ if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playin
 
     _G.Loaded = true
     print("Welcome to fuck hudzell.")
+	
+	--loadstring(game:HttpGet("https://raw.githubusercontent.com/xgamerman626/Hub/main/Init.lua"))()
+--task.wait(3)
+local PlaceID = game.PlaceId
+local AllIDs = {}
+local foundAnything = ""
+local actualHour = os.date("!*t").hour
+local Deleted = false
+local File = pcall(function()
+   AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
+end)
+if not File then
+   table.insert(AllIDs, actualHour)
+   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+end
+function TPReturner()
+   local Site;
+   if foundAnything == "" then
+       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
+   else
+       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
+   end
+   local ID = ""
+   if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
+       foundAnything = Site.nextPageCursor
+   end
+   local num = 0;
+   for i,v in pairs(Site.data) do
+       local Possible = true
+       ID = tostring(v.id)
+       if tonumber(v.maxPlayers) > tonumber(v.playing) then
+           for _,Existing in pairs(AllIDs) do
+               if num ~= 0 then
+                   if ID == tostring(Existing) then
+                       Possible = false
+                   end
+               else
+                   if tonumber(actualHour) ~= tonumber(Existing) then
+                       local delFile = pcall(function()
+                           delfile("NotSameServers.json")
+                           AllIDs = {}
+                           table.insert(AllIDs, actualHour)
+                       end)
+                   end
+               end
+               num = num + 1
+           end
+           if Possible == true then
+               table.insert(AllIDs, ID)
+               wait()
+               pcall(function()
+                   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
+                   wait()
+                   game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
+               end)
+               wait(4)
+           end
+       end
+   end
+end
+function Teleport()
+   while wait() do
+       pcall(function()
+           TPReturner()
+           if foundAnything ~= "" then
+               TPReturner()
+           end
+       end)
+   end
+end
+
+local Rarities          = {"Common","Uncommon","Rare","Epic","Legendary","Ultimate","Resplendent"}
+local Accept_Rarity     = "Ultimate"
+
+-- Misc Functions
+local function RairityCheck(Rarity)
+    local function Value_to_Index(Value)
+        for i,v in ipairs(Rarities) do
+            if v == Value then
+                return i
+            end
+        end
+        return nil
+    end
+    if Value_to_Index(Rarity) >= Value_to_Index(Accept_Rarity) then
+        return true
+    else
+        return false
+    end
+end
+
+local me = game.Players.LocalPlayer
+local mee = me.Character
+local HRP = mee.HumanoidRootPart
+
+local have = 0
+for _, v in pairs(Workspace:GetChildren()) do
+    if v:FindFirstChild("BagTouchScript") and RairityCheck(v:FindFirstChild("Rarity").Value) then
+        --HRP.CFrame = CFrame.new(v.Main.Position.x, v.Main.Position.y + 50, v.Main.Position.z)
+        have = have + 1
+	end
+end
+
+if have == 0 then 
+	Teleport()
+end
 
     -- Declare static variables
     local Version = "1.61"
@@ -420,110 +526,4 @@ if game.PlaceId == 445664957 and not _G.Loaded then -- Only run script if playin
 
     Notify("Welcome to fuck hudzell. Press " ..UserInputService:GetStringForKeyCode(Config.Keybind).. " to toggle the gui.", true)
     Notify("fuck hudzell is no longer being actively updated, I don't play Roblox these days.", false)
-	
-	--loadstring(game:HttpGet("https://raw.githubusercontent.com/xgamerman626/Hub/main/Init.lua"))()
---task.wait(3)
-local PlaceID = game.PlaceId
-local AllIDs = {}
-local foundAnything = ""
-local actualHour = os.date("!*t").hour
-local Deleted = false
-local File = pcall(function()
-   AllIDs = game:GetService('HttpService'):JSONDecode(readfile("NotSameServers.json"))
-end)
-if not File then
-   table.insert(AllIDs, actualHour)
-   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-end
-function TPReturner()
-   local Site;
-   if foundAnything == "" then
-       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100'))
-   else
-       Site = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. PlaceID .. '/servers/Public?sortOrder=Asc&limit=100&cursor=' .. foundAnything))
-   end
-   local ID = ""
-   if Site.nextPageCursor and Site.nextPageCursor ~= "null" and Site.nextPageCursor ~= nil then
-       foundAnything = Site.nextPageCursor
-   end
-   local num = 0;
-   for i,v in pairs(Site.data) do
-       local Possible = true
-       ID = tostring(v.id)
-       if tonumber(v.maxPlayers) > tonumber(v.playing) then
-           for _,Existing in pairs(AllIDs) do
-               if num ~= 0 then
-                   if ID == tostring(Existing) then
-                       Possible = false
-                   end
-               else
-                   if tonumber(actualHour) ~= tonumber(Existing) then
-                       local delFile = pcall(function()
-                           delfile("NotSameServers.json")
-                           AllIDs = {}
-                           table.insert(AllIDs, actualHour)
-                       end)
-                   end
-               end
-               num = num + 1
-           end
-           if Possible == true then
-               table.insert(AllIDs, ID)
-               wait()
-               pcall(function()
-                   writefile("NotSameServers.json", game:GetService('HttpService'):JSONEncode(AllIDs))
-                   wait()
-                   game:GetService("TeleportService"):TeleportToPlaceInstance(PlaceID, ID, game.Players.LocalPlayer)
-               end)
-               wait(4)
-           end
-       end
-   end
-end
-function Teleport()
-   while wait() do
-       pcall(function()
-           TPReturner()
-           if foundAnything ~= "" then
-               TPReturner()
-           end
-       end)
-   end
-end
-
-local Rarities          = {"Common","Uncommon","Rare","Epic","Legendary","Ultimate","Resplendent"}
-local Accept_Rarity     = "Ultimate"
-
--- Misc Functions
-local function RairityCheck(Rarity)
-    local function Value_to_Index(Value)
-        for i,v in ipairs(Rarities) do
-            if v == Value then
-                return i
-            end
-        end
-        return nil
-    end
-    if Value_to_Index(Rarity) >= Value_to_Index(Accept_Rarity) then
-        return true
-    else
-        return false
-    end
-end
-
-local me = game.Players.LocalPlayer
-local mee = me.Character
-local HRP = mee.HumanoidRootPart
-
-local have = 0
-for _, v in pairs(Workspace:GetChildren()) do
-    if v:FindFirstChild("BagTouchScript") and RairityCheck(v:FindFirstChild("Rarity").Value) then
-        --HRP.CFrame = CFrame.new(v.Main.Position.x, v.Main.Position.y + 50, v.Main.Position.z)
-        have = have + 1
-	end
-end
-
-if have == 0 then 
-	Teleport()
-end
 end
